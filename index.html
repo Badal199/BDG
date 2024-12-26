@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REAPER DEATH - Hacker System</title>
+    <style>
+        /* Body Styling */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000; /* Hacker-style black background */
+            color: #00ff00; /* Neon green text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00;
+        }
+
+        /* Timer Box */
+        .timer-box {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(45deg, #003300, #00ff00);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .timer-box span {
+            font-weight: bold;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        /* Result Box Styling */
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            width: 50%;
+            text-align: center;
+            border: 3px solid #00ff00; /* Glowing border */
+            border-radius: 15px;
+            box-shadow: 0 0 30px #00ff00, 0 0 50px #00ff00;
+        }
+
+        .result-box-header {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px #00ff00;
+        }
+
+        .result-box-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .result-box-table th, .result-box-table td {
+            padding: 15px;
+            border: 1px solid #00ff00;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .result-box-table th {
+            background: linear-gradient(45deg, #003300, #00ff00);
+            color: black;
+            font-weight: bold;
+        }
+
+        .result-box-table td {
+            background-color: #001a00;
+            color: #00ff00;
+        }
+
+        /* Register Link Styling */
+        .register-link {
+            margin-top: 20px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #000;
+            background-color: #00ff00;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 0 10px #00ff00;
+            transition: all 0.3s ease;
+        }
+
+        .register-link:hover {
+            background-color: #003300;
+            color: #00ff00;
+            box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">OFTEZY CHEAT</div>
+    <div class="timer-box">
+        <div>Server Connected</div>
+        <div>Period Number: <span id="period1m">Loading...</span></div>
+        <div>Timer: <span id="timer1m">00:00</span></div>
+    </div>
+    <div class="result-box">
+        <div class="result-box-header">Current Result</div>
+        <table class="result-box-table">
+            <thead>
+                <tr>
+                    <th>Period</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody id="resultBody">
+                <!-- Only one result will show -->
+            </tbody>
+        </table>
+    </div>
+    <a href="https://www.bdglottery.net//#/register?invitationCode=754734011586" target="_blank" class="register-link">
+        Register Here
+    </a>
+
+    <script>
+        const resultsPattern = [
+            "SMALL", "BIG", "SMALL", "SMALL", "SMALL",
+            "BIG", "BIG", "SMALL", "BIG", "BIG",
+            "SMALL", "BIG", "SMALL", "SMALL"
+        ];
+
+        let currentPeriodIndex = 0;
+
+        function updatePeriodAndTimer() {
+            const now = new Date();
+            const seconds = now.getUTCSeconds();
+            const remainingSeconds = 60 - seconds;
+            const minutes = now.getUTCMinutes();
+            const totalMinutes = now.getUTCHours() * 60 + minutes;
+
+            // Update period number
+            const periodElement = document.getElementById("period1m");
+            const periodNumber = `${now.getUTCFullYear()}${(now.getUTCMonth() + 1)
+                .toString()
+                .padStart(2, "0")}${now.getUTCDate().toString().padStart(2, "0")}1000${(
+                10001 + totalMinutes
+            ).toString()}`;
+            periodElement.textContent = periodNumber;
+
+            // Update timer
+            const timerElement = document.getElementById("timer1m");
+            timerElement.textContent = `   00  :  ${remainingSeconds
+                .toString()
+                .padStart(2, "0")}`.replace(/(?<=\\d)(?=\\d)/g, " ");
+
+            // Show result when period changes
+            if (remainingSeconds === 60) {
+                displayResult(periodNumber);
+            }
+        }
+
+        function displayResult(periodNumber) {
+            const resultBody = document.getElementById("resultBody");
+
+            // Clear previous result
+            resultBody.innerHTML = "";
+
+            // Add the new result
+            const newRow = document.createElement("tr");
+
+            const periodCell = document.createElement("td");
+            periodCell.textContent = periodNumber;
+
+            const resultCell = document.createElement("td");
+            resultCell.textContent = resultsPattern[currentPeriodIndex];
+            currentPeriodIndex = (currentPeriodIndex + 1) % resultsPattern.length;
+
+            newRow.appendChild(periodCell);
+            newRow.appendChild(resultCell);
+            resultBody.appendChild(newRow);
+        }
+
+        // Initialize the timer update
+        setInterval(updatePeriodAndTimer, 1000);
+    </script>
+</body>
+</html>
